@@ -67,7 +67,7 @@ def array_remove(array, value):
         array.size -= 1
         array.elements[array.size] = None
     else:
-        print("Error, value not found")
+        print(f"Error, {value} not found")
 
 
 
