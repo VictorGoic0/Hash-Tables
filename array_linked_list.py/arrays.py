@@ -56,17 +56,34 @@ def array_append(array, value):
 
 # Remove the first occurence of the given element from the array
 # Throw an error if the value is not found
-def array_remove():
-    # Your code here
-    pass
+def array_remove(array, value):
+    removed = False
+    for i in range(array.size):
+        if removed:
+            array.elements[i-1] = array.elements[i]
+        elif array.elements[i] == value:
+            removed = True
+    if removed:
+        array.size -= 1
+        array.elements[array.size] = None
+    else:
+        print("Error, value not found")
+
 
 
 # Remove the element in a given position and return it
 # Then shift every element after that occurrance to fill the gap
-def array_pop():
-    # Throw an error if array is out of the current count
-    # Your code here
-    pass
+def array_pop(array, index):
+    if index >= array.size:
+        print("Out of range")
+        return None
+    else:
+        value = array.elements[index]
+        for i in range(index, array.size-1):
+            array.elements[i] = array.elements[i+1]
+        array.size -= 1
+        array.elements[array.size] = None
+        return value
 
 
 # Utility to print an array
@@ -86,7 +103,7 @@ arr = array(1)
 
 array_insert(arr, "STRING1", 0)
 array_print(arr)
-# array_pop(arr, 0)
+array_pop(arr, 0)
 array_print(arr)
 array_insert(arr, "STRING1", 0)
 array_append(arr, "STRING4")
