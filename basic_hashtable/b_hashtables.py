@@ -23,8 +23,14 @@ class BasicHashTable:
 # Fill this in.
 # Research and implement the djb2 hash function
 # '''
-def hash(string, max):
+def hash(string):
+    hashed = 5381
+    byte_array = string.encode('utf-8')
+    for byte in byte_array:
+        hashed = ((hashed * 33) ^ byte) % 0x100000000
+    return hashed % 6
 
+print(hash("Nope"))
 
 # '''
 # Fill this in.
