@@ -40,7 +40,7 @@ def hash_table_insert(hash_table, key, value):
     index = hashed % hash_table.capacity
     if index in hash_table.storage:
         print(f"Overwriting {hash_table.storage[index]}")
-    hash_table.storage[index] = value
+    hash_table.storage[index] = Pair(key, value)
 
 
 # '''
@@ -66,7 +66,7 @@ def hash_table_retrieve(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
     if index in hash_table.storage:
-        return hash_table.storage[index]
+        return hash_table.storage[index].value
     else:
         return None
 
