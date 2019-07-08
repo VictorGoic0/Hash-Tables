@@ -28,9 +28,7 @@ def hash(string):
     byte_array = string.encode('utf-8')
     for byte in byte_array:
         hashed = ((hashed * 33) ^ byte) % 0x100000000
-    return hashed % 6
-
-print(hash("Nope"))
+    return hashed
 
 # '''
 # Fill this in.
@@ -38,7 +36,8 @@ print(hash("Nope"))
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
-    index = hash(key)
+    hashed = hash(key)
+    index = hashed % hash_table.capacity
     if index in hash_table.storage:
         print(f"Overwriting {hash_table.storage[index]}")
     hash_table.storage[index] = value
@@ -50,7 +49,8 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    index = hash(key)
+    hashed = hash(key)
+    index = hashed % hash_table.capacity
     if index in hash_table.storage:
         hash_table.storage[index] = None
     else:
@@ -63,7 +63,8 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    index = hash(key)
+    hashed = hash(key)
+    index = hashed % hash_table.capacity
     if index in hash_table.storage:
         return hash_table.storage[index]
     else:
