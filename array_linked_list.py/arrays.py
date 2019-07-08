@@ -2,45 +2,56 @@
 
 # Do not use any of the built in array functions for this exercise
 class array:
-    def __init__(self):
+    def __init__(self, capacity):
         # Your code here
-        pass
+        self.capacity = capacity
+        self.size = 0
+        self.elements = [None] * self.capacity
 
 
 # Double the size of the given array
-def resize_array():
-    # Your code here
-    pass
+def resize_array(array):
+    new_capacity = array.capacity * 2
+    new_elements = [None] * new_capacity
+
+    for i in range(array.size):
+        new_elements[i] = array.elements[i]
+
+    array.capacity = new_capacity
+    array.elements = new_elements
 
 
 # Return an element of a given array at a given index
-def array_read():
-    # Throw an error if array is out of the current count
-    # Your code here
-    pass
+def array_read(array, index):
+    if index < 0 or index >= array.size:
+        print("Error out of bounds")
+        return None
+    else:
+        return array[index]
 
 
 # Insert an element in a given array at a given index
-def array_insert():
+def array_insert(array, value, index):
     # Throw an error if array is out of the current count
+    if index > array.size:
+        print("Error out of bounds")
+        return None
 
     # Resize the array if the number of elements is over capacity
+    if array.capacity == array.size:
+        resize_array(array)
 
     # Move the elements to create a space at 'index'
     # Think about where to start!
-
-    # Add the new element to the array and update the count
-    pass
-
+    for i in range(array.size, index, -1):
+        if i > index:
+            array.elements[i] = array.elements[i-1]
+    array.elements[index] = value
+    array.size += 1
 
 # Add an element to the end of the given array
-def array_append():
-
-    # Hint, this can be done with one line of code
-    # (Without using a built in function)
-
-    # Your code here
-    pass
+def array_append(array, value):
+    array_insert(array, value, array.size)
 
 
 # Remove the first occurence of the given element from the array
@@ -61,24 +72,24 @@ def array_pop():
 # Utility to print an array
 def array_print(array):
     string = "["
-    for i in range(array.count):
+    for i in range(array.size):
         string += str(array.elements[i])
-        if i < array.count - 1:
+        if i < array.size - 1:
             string += ", "
 
     string += "]"
     print(string)
 
 
-# # Testing
-# arr = array(1)
+# Testing
+arr = array(1)
 
-# array_insert(arr, "STRING1", 0)
-# array_print(arr)
+array_insert(arr, "STRING1", 0)
+array_print(arr)
 # array_pop(arr, 0)
-# array_print(arr)
-# array_insert(arr, "STRING1", 0)
-# array_append(arr, "STRING4")
-# array_insert(arr, "STRING2", 1)
-# array_insert(arr, "STRING3", 2)
-# array_print(arr)
+array_print(arr)
+array_insert(arr, "STRING1", 0)
+array_append(arr, "STRING4")
+array_insert(arr, "STRING2", 1)
+array_insert(arr, "STRING3", 2)
+array_print(arr)
