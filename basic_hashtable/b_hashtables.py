@@ -137,7 +137,15 @@ def hash_table_retrieve(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
     if index in hash_table.storage:
-        return hash_table.storage[index].value
+        current_node = hash_table.storage[index].head
+        found_key = False
+            while current_node:
+                if current_node.value.key == key:
+                    return current_node.value.value
+                else:
+                    current_node = current_node.next
+            if not found_key:
+                return None
     else:
         return None
 
