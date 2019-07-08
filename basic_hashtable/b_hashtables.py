@@ -108,22 +108,23 @@ def hash_table_insert(hash_table, key, value):
 def hash_table_remove(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
-    if index in hash_table.storage:
-        if hash_table.storage[index].length == 1:
-            hash_table.storage[index] = None
-        else:
-            # loop through, look for the key
-            current_node = hash_table.storage[index].head
-            found_key = False
-            while current_node:
-                if current_node.value.key == key:
-                    hash_table.storage[index].delete(current_node)
-                    found_key = True
-                    break
-                else:
-                    current_node = current_node.next
-            if not found_key:
-                print("Warning: Key not found")
+    if index < hash_table.capacity:
+        if hash_table.storage[index]:
+            if hash_table.storage[index].length == 1:
+                hash_table.storage[index] = None
+            else:
+                # loop through, look for the key
+                current_node = hash_table.storage[index].head
+                found_key = False
+                while current_node:
+                    if current_node.value.key == key:
+                        hash_table.storage[index].delete(current_node)
+                        found_key = True
+                        break
+                    else:
+                        current_node = current_node.next
+                if not found_key:
+                    print("Warning: Key not found")
     else:
         print("Warning: Key not found")
 
@@ -136,16 +137,19 @@ def hash_table_remove(hash_table, key):
 def hash_table_retrieve(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
-    if index in hash_table.storage:
-        current_node = hash_table.storage[index].head
-        found_key = False
-        while current_node:
-            if current_node.value.key == key:
-                return current_node.value.value
-            else:
-                current_node = current_node.next
-        if not found_key:
-            return None
+    if index < hash_table.capacity:
+        if hash_table.storage[index]:
+            current_node = hash_table.storage[index].head
+            found_key = False
+            while current_node:
+                print("WHILE FIRE")
+                if current_node.value.key == key:
+                    print(current_node.value.value, '<---')
+                    return current_node.value.value
+                else:
+                    current_node = current_node.next
+            if not found_key:
+                return None
     else:
         return None
 
