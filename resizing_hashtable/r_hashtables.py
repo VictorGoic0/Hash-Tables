@@ -66,35 +66,27 @@ class HashTable:
     self.capacity = capacity
     self.storage = [None] * capacity
     self.pairs = 0
-    self.load = self.calculateLoad()
-  def calculateLoad(self):
+  def load(self):
     return self.pairs / self.capacity
 
+  def check_resize(self):
+    if self.load() > .7:
+      self.resize()
 
-# '''
-# Fill this in.
-# Research and implement the djb2 hash function
-# '''
-def hash(string):
+  def hash(self, string):
     hashed = 5381
     byte_array = string.encode('utf-8')
     for byte in byte_array:
         hashed = ((hashed * 33) ^ byte) % 0x100000000
     return hashed
-
-def check_resize(hash_table):
-  if hash_table.load > .7:
-    new_table = hash_table_resize(hash_table)
-    hash_table = new_table
-    return hash_table
-
-def hash_table_insert(hash_table, key, value):
-    hashed = hash(key)
-    index = hashed % hash_table.capacity
-    if hash_table.storage[index]:
+  
+  def insert(self, key, value):
+    hashed = self.hash(key)
+    index = hashed % self.capacity
+    if self.storage[index]:
         new_pair = Pair(key, value)
         duplicate = False
-        current_node = hash_table.storage[index].head
+        current_node = self.storage[index].head
         while current_node:
             if current_node.value.key == key:
                 current_node.value = new_pair
@@ -103,39 +95,33 @@ def hash_table_insert(hash_table, key, value):
             else:
                 current_node = current_node.next
         if not duplicate:
-            hash_table.storage[index].add_to_tail(new_pair)
-            hash_table.pairs += 1
-            check_resize(hash_table)
+            self.storage[index].add_to_tail(new_pair)
+            self.pairs += 1
+            self.check_resize()
     else:
         new_pair = Pair(key, value)
         new_bucket = DoublyLinkedList()
         new_bucket.add_to_tail(new_pair)
-        hash_table.storage[index] = new_bucket
-        hash_table.pairs += 1
-        check_resize(hash_table)
+        self.storage[index] = new_bucket
+        self.pairs += 1
+        self.check_resize()
 
-
-# '''
-# Fill this in.
-
-# If you try to remove a value that isn't there, print a warning.
-# '''
-def hash_table_remove(hash_table, key):
-    hashed = hash(key)
-    index = hashed % hash_table.capacity
-    if hash_table.storage[index]:
-      if hash_table.storage[index].length == 1:
-        if hash_table.storage[index].head.value.key == key:
-          hash_table.storage[index] = None
+  def remove(self, key):
+    hashed = self.hash(key)
+    index = hashed % self.capacity
+    if self.storage[index]:
+      if self.storage[index].length == 1:
+        if self.storage[index].head.value.key == key:
+          self.storage[index] = None
         else:
           print("Warning: Key not found")
       else:
       # loop through, look for the key
-        current_node = hash_table.storage[index].head
+        current_node = self.storage[index].head
         found_key = False
         while current_node:
           if current_node.value.key == key:
-            hash_table.storage[index].delete(current_node)
+            self.storage[index].delete(current_node)
             found_key = True
             break
           else:
@@ -145,17 +131,11 @@ def hash_table_remove(hash_table, key):
     else:
       print("Warning: Key not found")
 
-
-# '''
-# Fill this in.
-
-# Should return None if the key is not found.
-# '''
-def hash_table_retrieve(hash_table, key):
-    hashed = hash(key)
-    index = hashed % hash_table.capacity
-    if hash_table.storage[index]:
-      current_node = hash_table.storage[index].head
+  def retrieve(self, key):
+    hashed = self.hash(key)
+    index = hashed % self.capacity
+    if self.storage[index]:
+      current_node = self.storage[index].head
       found_key = False
       while current_node:
         if current_node.value.key == key:
@@ -166,40 +146,55 @@ def hash_table_retrieve(hash_table, key):
         return None
     else:
         return None
-
-def hash_table_resize(hash_table):
-    new_capacity = hash_table.capacity * 2
+        
+  def resize(self):
+    new_capacity = self.capacity * 2
     new_table = HashTable(new_capacity)
-    for bucket in hash_table.storage:
+    for bucket in self.storage:
         if bucket:
             current_node = bucket.head
             while current_node:
                 key = current_node.value.key
                 value = current_node.value.value
-                hash_table_insert(new_table, key, value)
+                new_table.insert(key, value)
                 current_node = current_node.next
         else:
             continue
-    return new_table
+    self.capacity = new_capacity
+    self.storage = new_table.storage
+    return self
 
 
 def Testing():
     ht = HashTable(2)
 
-    hash_table_insert(ht, "line_1", "Tiny hash table")
-    hash_table_insert(ht, "line_2", "Filled beyond capacity")
-    hash_table_insert(ht, "line_3", "Linked list saves the day!")
+    ht.insert("line_1", "Tiny hash table")
+    print(ht.pairs, '<--- pairs')
+    print(ht.load(), '<--- load')
+    print(ht.capacity, '<--- capacity')
+    ht.insert("line_2", "Filled beyond capacity")
+    print(ht.pairs, '<--- pairs')
+    print(ht.load(), '<--- load')
+    print(ht.capacity, '<--- capacity')
+    ht.insert("line_3", "Linked list saves the day!")
+    print(ht.pairs, '<--- pairs')
+    print(ht.load(), '<--- load')
+    print(ht.capacity, '<--- capacity')
+    ht.insert("line_4", "Automatic resizing")
+    print(ht.pairs, '<--- pairs')
+    print(ht.load(), '<--- load')
+    print(ht.capacity, '<--- capacity')
 
-    print(hash_table_retrieve(ht, "line_1"))
-    print(hash_table_retrieve(ht, "line_2"))
-    print(hash_table_retrieve(ht, "line_3"))
+    print(ht.retrieve("line_1"))
+    print(ht.retrieve("line_2"))
+    print(ht.retrieve("line_3"))
 
-    old_capacity = len(ht.storage)
-    ht = hash_table_resize(ht)
-    new_capacity = len(ht.storage)
+    # old_capacity = len(ht.storage)
+    # ht = ht.resize()
+    # new_capacity = len(ht.storage)
 
-    print("Resized hash table from " + str(old_capacity)
-          + " to " + str(new_capacity) + ".")
+    # print("Resized hash table from " + str(old_capacity)
+    #       + " to " + str(new_capacity) + ".")
 
 
 Testing()
