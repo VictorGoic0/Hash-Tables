@@ -65,6 +65,10 @@ class HashTable:
   def __init__(self, capacity):
     self.capacity = capacity
     self.storage = [None] * capacity
+    self.pairs = 0
+    self.load = self.calculateLoad()
+  def calculateLoad(self):
+    return self.pairs / self.capacity
 
 
 # '''
@@ -77,6 +81,12 @@ def hash(string):
     for byte in byte_array:
         hashed = ((hashed * 33) ^ byte) % 0x100000000
     return hashed
+
+def check_resize(hash_table):
+  if hash_table.load > .7:
+    new_table = hash_table_resize(hash_table)
+    hash_table = new_table
+    return hash_table
 
 def hash_table_insert(hash_table, key, value):
     hashed = hash(key)
@@ -94,11 +104,15 @@ def hash_table_insert(hash_table, key, value):
                 current_node = current_node.next
         if not duplicate:
             hash_table.storage[index].add_to_tail(new_pair)
+            hash_table.pairs += 1
+            check_resize(hash_table)
     else:
         new_pair = Pair(key, value)
         new_bucket = DoublyLinkedList()
         new_bucket.add_to_tail(new_pair)
         hash_table.storage[index] = new_bucket
+        hash_table.pairs += 1
+        check_resize(hash_table)
 
 
 # '''
