@@ -78,11 +78,6 @@ def hash(string):
         hashed = ((hashed * 33) ^ byte) % 0x100000000
     return hashed
 
-# '''
-# Fill this in.
-
-# If you are overwriting a value with a different key, print a warning.
-# '''
 def hash_table_insert(hash_table, key, value):
     hashed = hash(key)
     index = hashed % hash_table.capacity
@@ -150,7 +145,6 @@ def hash_table_retrieve(hash_table, key):
       found_key = False
       while current_node:
         if current_node.value.key == key:
-          print(current_node.value.value, '<---')
           return current_node.value.value
         else:
           current_node = current_node.next

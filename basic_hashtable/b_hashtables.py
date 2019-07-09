@@ -141,7 +141,6 @@ def hash_table_retrieve(hash_table, key):
       found_key = False
       while current_node:
         if current_node.value.key == key:
-          print(current_node.value.value, '<---')
           return current_node.value.value
         else:
           current_node = current_node.next
