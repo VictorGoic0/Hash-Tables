@@ -66,6 +66,7 @@ class HashTable:
     self.capacity = capacity
     self.storage = [None] * capacity
     self.pairs = 0
+
   def load(self):
     return self.pairs / self.capacity
 
@@ -78,11 +79,10 @@ class HashTable:
     byte_array = string.encode('utf-8')
     for byte in byte_array:
         hashed = ((hashed * 33) ^ byte) % 0x100000000
-    return hashed
+    return hashed % self.capacity
   
   def insert(self, key, value):
-    hashed = self.hash(key)
-    index = hashed % self.capacity
+    index = self.hash(key)
     if self.storage[index]:
         new_pair = Pair(key, value)
         duplicate = False
@@ -107,8 +107,7 @@ class HashTable:
         self.check_resize()
 
   def remove(self, key):
-    hashed = self.hash(key)
-    index = hashed % self.capacity
+    index = self.hash(key)
     if self.storage[index]:
       if self.storage[index].length == 1:
         if self.storage[index].head.value.key == key:
@@ -132,8 +131,7 @@ class HashTable:
       print("Warning: Key not found")
 
   def retrieve(self, key):
-    hashed = self.hash(key)
-    index = hashed % self.capacity
+    index = self.hash(key)
     if self.storage[index]:
       current_node = self.storage[index].head
       found_key = False
