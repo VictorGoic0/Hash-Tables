@@ -1,9 +1,3 @@
-
-class Pair:
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-
 class ListNode:
   def __init__(self, value, prev=None, _next=None):
     self.value = value
@@ -62,12 +56,15 @@ class DoublyLinkedList:
       self.head = None
       self.tail = None
 
-
+class Pair:
+  def __init__(self, key, value):
+    self.key = key
+    self.value = value
 
 class BasicHashTable:
-    def __init__(self, capacity):
-        self.capacity = capacity
-        self.storage = [None] * capacity
+  def __init__(self, capacity):
+    self.capacity = capacity
+    self.storage = [None] * capacity
 
 
 # '''
@@ -89,7 +86,7 @@ def hash(string):
 def hash_table_insert(hash_table, key, value):
     hashed = hash(key)
     index = hashed % hash_table.capacity
-    if index in hash_table.storage:
+    if hash_table.storage[index]:
         current_bucket = hash_table.storage[index]
         new_pair = Pair(key, value)
         current_bucket.add_to_tail(new_pair)
@@ -108,25 +105,27 @@ def hash_table_insert(hash_table, key, value):
 def hash_table_remove(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
-    if index < hash_table.capacity:
-        if hash_table.storage[index]:
-            if hash_table.storage[index].length == 1:
-                hash_table.storage[index] = None
-            else:
-                # loop through, look for the key
-                current_node = hash_table.storage[index].head
-                found_key = False
-                while current_node:
-                    if current_node.value.key == key:
-                        hash_table.storage[index].delete(current_node)
-                        found_key = True
-                        break
-                    else:
-                        current_node = current_node.next
-                if not found_key:
-                    print("Warning: Key not found")
+    if hash_table.storage[index]:
+      if hash_table.storage[index].length == 1:
+        if hash_table.storage[index].head.value.key == key:
+          hash_table.storage[index] = None
+        else:
+          print("Warning: Key not found")
+      else:
+      # loop through, look for the key
+        current_node = hash_table.storage[index].head
+        found_key = False
+        while current_node:
+          if current_node.value.key == key:
+            hash_table.storage[index].delete(current_node)
+            found_key = True
+            break
+          else:
+            current_node = current_node.next
+        if not found_key:
+          print("Warning: Key not found")
     else:
-        print("Warning: Key not found")
+      print("Warning: Key not found")
 
 
 # '''
@@ -137,19 +136,17 @@ def hash_table_remove(hash_table, key):
 def hash_table_retrieve(hash_table, key):
     hashed = hash(key)
     index = hashed % hash_table.capacity
-    if index < hash_table.capacity:
-        if hash_table.storage[index]:
-            current_node = hash_table.storage[index].head
-            found_key = False
-            while current_node:
-                print("WHILE FIRE")
-                if current_node.value.key == key:
-                    print(current_node.value.value, '<---')
-                    return current_node.value.value
-                else:
-                    current_node = current_node.next
-            if not found_key:
-                return None
+    if hash_table.storage[index]:
+      current_node = hash_table.storage[index].head
+      found_key = False
+      while current_node:
+        if current_node.value.key == key:
+          print(current_node.value.value, '<---')
+          return current_node.value.value
+        else:
+          current_node = current_node.next
+      if not found_key:
+        return None
     else:
         return None
 
