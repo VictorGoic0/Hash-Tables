@@ -87,9 +87,18 @@ def hash_table_insert(hash_table, key, value):
     hashed = hash(key)
     index = hashed % hash_table.capacity
     if hash_table.storage[index]:
-        current_bucket = hash_table.storage[index]
         new_pair = Pair(key, value)
-        current_bucket.add_to_tail(new_pair)
+        duplicate = False
+        current_node = hash_table.storage[index].head
+        while current_node:
+            if current_node.value.key == key:
+                current_node.value = new_pair
+                duplicate = True
+                break
+            else:
+                current_node = current_node.next
+        if not duplicate:
+            hash_table.storage[index].add_to_tail(new_pair)
     else:
         new_pair = Pair(key, value)
         new_bucket = DoublyLinkedList()
