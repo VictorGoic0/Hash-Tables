@@ -160,7 +160,6 @@ class HashTable:
             continue
     self.capacity = new_capacity
     self.storage = new_table.storage
-    return self
 
 
 def Testing():
